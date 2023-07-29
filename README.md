@@ -141,7 +141,7 @@ API Documentation can be accessed [here](https://app.swaggerhub.com/apis-docs/AL
 
 ### B10 - Automated Testing using Browser Kit Testing
 
-- The test scripts can be seen inside `tests` folder. The unit tests cover 87.5% of Service Layer where the business logic lays (100% of the required specification). The e2e tests cover 6/6 page with exception search bar for the barang page
+- The test scripts can be seen inside `tests` folder. The unit tests cover 95% of Service Layer where the business logic lays (minus some method for KeranjangService). The e2e tests cover 6/6 page
 - To run the test scripts, run the following command
   ```
   php artisan test
