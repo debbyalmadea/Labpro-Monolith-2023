@@ -36,8 +36,7 @@ docker exec -it <container-id> sh
 2. Install the vendor with `composer install`
 3. Run the migration by `php artisan migrate`
 4. Run the seeding by `php artisan db:seed`
-5. or you can run all of that with `bash start.sh`
-6. The password from the seed is always set to `password123` with email `berrygood@gmail.com`
+5. The password from the seed is always set to `password123` with email `berrygood@gmail.com`
 
 ### Additional Notes
 - If you got postgresql connection error, check your postgresql database and change the `.env` file to match your postgresql settings
