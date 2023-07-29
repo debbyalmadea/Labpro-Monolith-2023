@@ -9,7 +9,6 @@
     <title>@yield('title')</title>
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <style>
@@ -28,6 +27,29 @@
             justify-content: center;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         }
+
+        @keyframes slide-in-out {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            10% {
+                transform: translateY(0);
+            }
+
+            90% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(-200%);
+            }
+        }
+
+        .slideInOut {
+            animation: slide-in-out 2s ease-in-out;
+            transform: translateY(-200%);
+        }
     </style>
     <script>
         var pusher = new Pusher('cd075e7da50dd8f19cff', {
@@ -37,22 +59,24 @@
         var channel = pusher.subscribe('labpro-monolith');
 
         channel.bind('new-keranjang', function(data) {
-            $.ajax({
-                url: '/api/auth/self',
-                method: 'GET',
-                dataType: 'json',
-                success: function(userData) {
-                    if (data.message.user_id === userData.data.user.id) {
-                        const cartButtonBadge = $('#cart-button-badge');
-                        if (cartButtonBadge.length > 0) {
-                            cartButtonBadge.html(data.message.count);
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/api/auth/self');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var userData = JSON.parse(xhr.responseText);
+                        if (data.message.user_id === userData.data.user.id) {
+                            var cartButtonBadge = document.getElementById('cart-button-badge');
+                            if (cartButtonBadge) {
+                                cartButtonBadge.textContent = data.message.count;
+                            }
                         }
+                    } else {
+                        console.error('Error while fetching data:', xhr.status);
                     }
-                },
-                error: function(error) {
-                    console.error('Error while fetching data:', error);
                 }
-            })
+            };
+            xhr.send();
         });
     </script>
 </head>

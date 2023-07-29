@@ -10,6 +10,8 @@ RUN set -ex \
 
 COPY . /var/www
 
+RUN composer install
+
 RUN php artisan optimize
 
 RUN php artisan key:generate

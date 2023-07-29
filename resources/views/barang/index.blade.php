@@ -48,52 +48,58 @@
 
             function fetchBarang() {
                 const searchParams = new URLSearchParams(window.location.search);
-                $.ajax({
-                    url: `/api/barang?${searchParams.toString()}`,
-                    dataType: 'json',
-                    success: function(data) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', `/api/barang?${searchParams.toString()}`);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.responseText);
                         if (data.status === 'success') {
                             const newData = data.data;
                             updateCardContainer(newData);
                         }
-                        setTimeout(fetchBarang, 5000);
-                    },
-                    error: function(error) {
-                        console.error('Error while fetching data:', error);
-                        setTimeout(fetchBarang, 5000);
+                    } else {
+                        console.error('Error while fetching data:', xhr.status);
                     }
-                });
+                    setTimeout(fetchBarang, 5000);
+                };
+                xhr.onerror = function() {
+                    console.error('Error while fetching data:', xhr.status);
+                    setTimeout(fetchBarang, 5000);
+                };
+                xhr.send();
             }
 
             function updateCardContainer(newData) {
-                const container = $('#card-container');
-                container.empty();
-                newData.forEach(item => {
-                    const card = createCard(item);
-                    container.append(card);
-                });
+                const container = document.getElementById('card-container');
+                if (container) {
+                    container.innerHTML = '';
+                    newData.forEach(item => {
+                        const card = createCard(item);
+                        container.appendChild(card);
+                    });
+                }
             }
 
             function createCard(item) {
-                const card = $('<div/>', {
-                    id: item.id,
-                    class: 'card bg-base-100 shadow-md no-animation mb-4',
-                    style: 'width: 20rem;',
-                    html: `
-                <div class="card-body">
-                    <h2 class="card-title">${item.nama}</h2>
-                    <p>Harga: ${item.harga}</p>
-                    <p>Stok: ${item.stok}</p>
-                    <div class="card-actions d-flex justify-content-end">
-                        <a href="/barang/${item.id}" class="btn btn-primary">Detail</a>
-                    </div>
-                </div>
-            `
-                });
+                const card = document.createElement('div');
+                card.id = item.id;
+                card.className = 'card bg-base-100 shadow-md no-animation mb-4';
+                card.style.width = '20rem';
+                card.innerHTML = `
+        <div class="card-body">
+            <h2 class="card-title">${item.nama}</h2>
+            <p>Harga: ${item.harga}</p>
+            <p>Stok: ${item.stok}</p>
+            <div class="card-actions d-flex justify-content-end">
+                <a href="/barang/${item.id}" class="btn btn-primary">Detail</a>
+            </div>
+        </div>
+    `;
                 return card;
             }
 
-            $(document).ready(function() {
+            document.addEventListener('DOMContentLoaded', function() {
                 polling();
             });
         </script>

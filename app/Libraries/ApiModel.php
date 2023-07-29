@@ -6,7 +6,7 @@ use App\Exceptions\HttpCustomException;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 
-abstract class ApiModel implements ApiModelInterface, Arrayable, Filterable
+abstract class ApiModel implements Arrayable, Filterable
 {
     protected string $table;
 

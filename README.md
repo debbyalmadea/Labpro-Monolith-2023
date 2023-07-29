@@ -40,6 +40,7 @@ docker exec -it <container-id> sh
 ### Additional Notes
 - If you got postgresql connection error, check your postgresql database and change the `.env` file to match your postgresql settings
 - Make sure to set the ports to 8000 as it is the port that is whitelisted by the single service
+- If you use single sevice app from docker, change the `SINGLE_SERVICE_API_URL` env to `host.docker.internal`
   
 ## Design Pattern
 1. Template Method 
@@ -56,49 +57,96 @@ docker exec -it <container-id> sh
    This pattern also implemented in laravel middleware system where we provide some handlers (functions) to handle a request. Each middleware function (in this case `Authenticate` and `BeforeChecout`) will processes a request, performs specific tasks, and passes control to the next middleware or the final route handler. This chainable pattern allow us to separate responsibility to different handlers making the code cleaner and each function have a more defined responsibility.
 
 ## Tech Stack
-- node.js v19.9.0
 - vite v4.0.0
 - tailwindcss v3.3.2
-- daisyui v3.2.1
+- bootstrap ui
 - laravel v10
 - php v8.2.8
 - pusher-js v8.3.0 (for realtime update)
 - jquery (ajax) v3.6.0 (for polling)
 
 ## Endpoint
-> Note ALL here means the whitelisted domain only
-1. `GET \`: check if server is running [ALL]
-2. `POST \login`: login to the system as admin and get the access token [ALL]
-3. `GET \self`: get self data (username and name) [ADMIN]
-4. `GET \barang`: get all barang data [ALL]
-5. `GET \barang\{id}`: get barang data by id [ALL]
-6. `POST \barang`: create a new barang [ADMIN]
-7. `PUT \barang\{id}`: update barang [ADMIN]
-8. `DELETE \barang\{id}`: delete barang [ADMIN]
-9. `PATCH \barang\{id}\stok\decrease`: decrease barang's stock (stok) [ALL]
-10. `GET \perusahaan`: get all perusahaan data [ALL]
-11. `GET \perusahaan\{id}`: get perusahaan data by id [ALL]
-12. `POST \perusahaan`: create a new perusahaan [ADMIN]
-13. `PUT \perusahaan\{id}`: update perusahaan [ADMIN]
-14. `DELETE \perusahaan`: delete perusahaan [ADMIN]
+### Api
+1. `GET /api/barang`: get all barang data [ALL]
+2. `POST /api/auth/login`: login to the system and get the access token [ALL]
+3. `POST /api/auth/regster`: register to the system and get the access token [ALL]
+4. `GET /api/auth/self`: get self data [ADMIN]
+
+### Web
+1. `GET /`: page katalog barang [USER] or login [ALL]
+2. `GET /auth/login`: login page [ALL]
+3. `POST /auth/login`: login to the system and get the access token [ALL]
+4. `GET /auth/register`: register page [ALL]
+5. `POST /auth/register`: register to the system and get the access token [ALL]
+6. `GET /logout`: logout from the system [USER]
+7. `GET /barang`: page katalog barang [USER]
+8. `GET /barang/{id}`: page detail barang [USER]
+9. `GET /barang/{id}/checkout`: page checkout barang [USER]
+10. `POST /barang/{id}/checkout`: checkout barang [USER]
+11. `GET /riwayat-pembelian`: page Riwayat Pembelian [USER]
+12. `GET /keranjang`: page Keranjang [USER]
+13. `POST /keranjang`: create keranjang [USER]
+14. `POST /keranjang/{id}/checkout`: checkout keranjang [USER]
+15. `PATCH /keranjang/{id}/jumlah/decrease`: decrease barang count in keranjang [USER]
+16. `PATCH /keranjang/{id}/jumlah/increase`: increase barang count in keranjang [USER]
+17. `DELETE /keranjang/{id}`: delete keranjang
 
 ## BONUS
 
-### API Documentation using Swagger
+### B04 - Polling
+
+This app use short polling to update the katalog barang page without refreshing the window
+
+### B05 - Lighthouse
+
+Here's the screenshot for the lighthouse report
+1. Login page
+[Login page](/assets/lighthouse-login.png)
+2. Register page
+[Register page](/assets/lighthouse-register.png)
+3. Katalog Barang page (96)
+[Katalog barang page](/assets/lighthouse-katalog-barang.png)
+4. Detail Barang page
+[Detail barang page](/assets/lighthouse-detail-barang.png)
+5. Riwayat Pembelian page
+[Riwayat pembelian page](/assets/lighthouse-riwayat-pembelian.png)
+6. Keranjang page
+[Keranjang page](/assets/lighthouse-cart-page.png)
+
+### B06 - Responsive Layout
+
+This app is compatible with both desktop and mobile browser. 
+
+### B07 - API Documentation using Swagger
 
 API Documentation can be accessed [here](https://app.swaggerhub.com/apis-docs/ALMADEAPUTRI/labpro-single-service/1.0.0)
 
-### Automated Testing using Jest
+### B08 - SOLID Application
+1. Single Responsibility
+   Similar to the Single Service app, this app also use MVC + Services architecture. By using this architecture, we're adhering to the Single Responsibility principle where the Controller classes are responsible for parsing the request, call the relevant service(s) to perform the required operations, and send the response. Service classes are responsible for handling complex business logic and provide an abstraction layer between the controller and the database. The view classes are responsible for displaying data to the user with the use of html (+ blade). The model classes are responsible for mapping relational database into an object. 
+2. Open-Closed Principle
+   The implementation of `ErrorHandlerChain` adheres to the Open-Closed Principle because the error handler is designed to be easily extended with new error handlers. Each error handler is represented as a separate class (HttpCustomExceptionHandler, QueryExceptionHandler) that extends the abstract ErrorHandlerChain class. When adding new error handlers, the existing error handler classes do not need to be modified and new error handler can be added to the chain without modifying the existing error handler classes.
+3. Liskov Substitution Principle
+   The implementation of subclasses of `ErrorHandlerChain`, `HttpCustomError`, `Barang`, `Riwayat Pembelin`, etc. adheres to the Liskov Substitution Principle. The subclasses for ErrorHandlerChain (HttpCustomExceptionHandler, QueryExceptionHandler) are replacing their superclass (ErrorHandlerChain) in the chain of responsibility. All subclasses adhere to the same interface defined by the ErrorHandlerChain superclass. 
+4. Interface Segregation Principle
+   The class `Keranjang` implements the Filterable interface and provides a specific implementation for the scopeFilter and builder method. This allows clients of the Keranjang class to use the filter method to filter the collection of Keranjang instances.
 
-- The test scripts can be seen inside `tests` folder. The tests cover 100% of Service Layer where the business logic lays
+   The class `AuthService` implements `AuthServiceInterface` which extends interfaces for authentication related service. It allows clients to use specific parts of the authentication service without being forced to depend on unnecessary methods or functionality that they don't require.
+5. Dependency Inversion Principle
+   The Controllers and Services layers only relying on abstractions instead of concrete implementations. The construction and dependency injection are done by laravel itself. This promotes decoupling and flexibility in your application. If there's any changes in the future for the Services or Models layer we don't need to change other layer that depends on it.
+
+### B10 - Automated Testing using Jest
+
+- The test scripts can be seen inside `tests` folder. The unit tests cover 87.5% of Service Layer where the business logic lays (100% of the required specification). The e2e tests cover 6/6 page with exception search bar for the barang page
 - To run the test scripts, run the following command
   ```
-  npm test
+  php artisan test
   ```
 
-### SOLID Application
-1. Single Responsibility
-2. Open-Closed Principle
-3. Liskov Substitution Principle
-4. Interface Segregation Principle
-5. Dependency Inversion Principle
+### B11 - Additional Feature
+1. Search feature
+
+   User can search by item's name or company's name
+2. Cart feature
+   
+   User can add items to cart and decrease/increase item's count in the cart page. The total items in the cart are shown on the floating icon and updated in real time using pusher

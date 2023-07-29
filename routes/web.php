@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [AuthController::class, 'viewLogin']);
+Route::get('/', [BarangController::class, 'viewManyBarang']);
 
 Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::get('/login', 'viewLogin')->name('login');

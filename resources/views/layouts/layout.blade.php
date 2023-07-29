@@ -16,13 +16,12 @@
 
     <div id="main-container" class="container py-8">
         @if (Session::has('success'))
-            <div class="alert alert-success animate-slideInOut fixed-top mx-auto right-0 left-0 mt-4"
-                style="max-width: 500px;">
+            <div class="alert alert-success slideInOut fixed-top mx-auto right-0 left-0 mt-4" style="max-width: 500px;">
                 <span>{{ Session::get('success') }}</span>
             </div>
         @endif
         @if (Session::has('error'))
-            <div class="alert alert-danger animate-slideInOut fixed-top mx-auto right-0 left-0 max-w-lg mt-4">
+            <div class="alert alert-danger slideInOut fixed-top mx-auto right-0 left-0 max-w-lg mt-4">
                 <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-x-circle-fill mr-2" width="1em" height="1em"
                     viewBox="0 0 16 16" fill="currentColor">
                     <path
