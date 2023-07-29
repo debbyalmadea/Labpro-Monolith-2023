@@ -31,7 +31,7 @@ abstract class ExceptionHandlerChain
                 );
             }
 
-            return back()->with('error', $e->getMessage());
+            return back()->with('error', 'Something went wrong');
         }
     }
 

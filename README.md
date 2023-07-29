@@ -20,7 +20,7 @@ Made Debby Almadea Putri
 ### Step by step
 1. Clone the project repository from GitHub using the following command:
 ```
-git clone https://github.com/debbyalmadea/Labpro-Monolith.git 
+git clone https://github.com/debbyalmadea/Labpro-Monolith-2023.git 
 cd Labpro-Monolith
 ```
 2. Rename `.env.example` file to `.env`. Feel free to change the value according to your sytem preferences
@@ -37,6 +37,7 @@ docker exec -it <container-id> sh
 3. Run the migration by `php artisan migrate`
 4. Run the seeding by `php artisan db:seed`
 5. The password from the seed is always set to `password123` with email `berrygood@gmail.com`
+6. Your app should run on port `8000`
 
 ### Additional Notes
 - If you got postgresql connection error, check your postgresql database and change the `.env` file to match your postgresql settings
@@ -102,17 +103,17 @@ This app use short polling to update the katalog barang page without refreshing 
 
 Here's the screenshot for the lighthouse report
 1. Login page
-[Login page](/assets/lighthouse-login.png)
+![Login page](/assets/lighthouse-login.png)
 2. Register page
-[Register page](/assets/lighthouse-register.png)
+![Register page](/assets/lighthouse-register.png)
 3. Katalog Barang page (96)
-[Katalog barang page](/assets/lighthouse-katalog-barang.png)
+![Katalog barang page](/assets/lighthouse-katalog-barang.png)
 4. Detail Barang page
-[Detail barang page](/assets/lighthouse-detail-barang.png)
+![Detail barang page](/assets/lighthouse-detail-barang.png)
 5. Riwayat Pembelian page
-[Riwayat pembelian page](/assets/lighthouse-riwayat-pembelian.png)
+![Riwayat pembelian page](/assets/lighthouse-riwayat-pembelian.png)
 6. Keranjang page
-[Keranjang page](/assets/lighthouse-cart-page.png)
+![Keranjang page](/assets/lighthouse-cart-page.png)
 
 ### B06 - Responsive Layout
 
@@ -120,7 +121,9 @@ This app is compatible with both desktop and mobile browser.
 
 ### B07 - API Documentation using Swagger
 
-API Documentation can be accessed [here](https://app.swaggerhub.com/apis-docs/ALMADEAPUTRI/labpro-single-service/1.0.0)
+API Documentation can be accessed [here](https://app.swaggerhub.com/apis-docs/ALMADEAPUTRI/labpro-monolith/1.0.0)
+
+> Note this documentation only includes the api routes or the endpoint that return json value. Most of the request from frontend return redirects or view data (html/server side rendering)
 
 ### B08 - SOLID Application
 1. Single Responsibility
