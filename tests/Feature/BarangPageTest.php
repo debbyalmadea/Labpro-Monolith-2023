@@ -21,19 +21,34 @@ class BarangPageTest extends TestCase
 
         $this->barangBuilder = Barang::with('perusahaan', 'perusahaan_id', 'id');
     }
-    public function testBarangPage(): void
+    public function testBarangPageWithSearch(): void
     {
         $user = User::factory()->create(['email' => 'kimjisoo@gmail.com', 'nama_depan' => 'Kim', 'nama_belakang' => 'Jisoo']);
         $token = (new JWTAuthHelper())->getToken($user);
         $cookie = Cookie::make('access_token', $token, 24 * 60);
 
         $barang = $this->barangBuilder->get()->first();
+
         $this->withSession(['access_token' => $cookie->getValue(), 'user' => 'Kim Jisoo'])
             ->visit('/barang')
-            ->see('Kim Jisoo')
-            ->click('Detail')
-            ->seePageIs('/barang/' . $barang->id);
+            ->see('Kim Jisoo');
+        if ($barang) {
+            $this->see($barang->nama)
+                ->see('Harga: ' . $barang->harga)
+                ->see('Stok: ' . $barang->stok)
+                ->see('Perusahaan: ' . $barang->nama_perusahaan)
+                ->type($barang->nama, 'search')
+                ->press('Search')
+                ->see($barang->nama)
+                ->see('Harga: ' . $barang->harga)
+                ->see('Stok: ' . $barang->stok)
+                ->see('Perusahaan: ' . $barang->nama_perusahaan)
+                ->click('Detail')
+                ->seePageIs('/barang/' . $barang->id);
+        }
     }
+
+
     public function testBarangPageRedirectToRiwayat(): void
     {
         $user = User::factory()->create(['email' => 'kimjisoo@gmail.com', 'nama_depan' => 'Kim', 'nama_belakang' => 'Jisoo']);

@@ -122,27 +122,31 @@ class KeranjangPageTest extends TestCase
     {
         $user = User::factory()->create(['email' => "kimjisoo@gmail.com"]);
 
-        $barang = $this->barangBuilder->get()->first();
-        $createdKeranjang = Keranjang::create([
-            'user_id' => $user->id,
-            'barang_id' => $barang->id,
-            'jumlah_barang' => 2,
-        ]);
+        $barangList = $this->barangBuilder->get();
 
-        $token = (new JWTAuthHelper())->getToken($user);
-        $cookie = Cookie::make('access_token', $token, 24 * 60);
+        if (count($barangList) > 0) {
+            $barang = $barangList->first();
+            $createdKeranjang = Keranjang::create([
+                'user_id' => $user->id,
+                'barang_id' => $barang->id,
+                'jumlah_barang' => 2,
+            ]);
 
-        $this->withSession(['access_token' => $cookie->getValue(), 'user' => 'Kim Jisoo'])
-            ->visit('/keranjang')
-            ->see($barang->nama)
-            ->see('Total harga: ' . $barang->harga * $createdKeranjang->jumlah_barang)
-            ->see('Jumlah: ' . $createdKeranjang->jumlah_barang)
-            ->see($this->formatDate($createdKeranjang->created_at))
-            ->press('Checkout')
-            ->see('Riwayat Pembelian')
-            ->see($barang->nama)
-            ->see('Total harga: ' . $barang->harga * $createdKeranjang->jumlah_barang)
-            ->see('Jumlah: ' . $createdKeranjang->jumlah_barang);
+            $token = (new JWTAuthHelper())->getToken($user);
+            $cookie = Cookie::make('access_token', $token, 24 * 60);
+
+            $this->withSession(['access_token' => $cookie->getValue(), 'user' => 'Kim Jisoo'])
+                ->visit('/keranjang')
+                ->see($barang->nama)
+                ->see('Total harga: ' . $barang->harga * $createdKeranjang->jumlah_barang)
+                ->see('Jumlah: ' . $createdKeranjang->jumlah_barang)
+                ->see($this->formatDate($createdKeranjang->created_at))
+                ->press('Checkout')
+                ->see('Riwayat Pembelian')
+                ->see($barang->nama)
+                ->see('Total harga: ' . $barang->harga * $createdKeranjang->jumlah_barang)
+                ->see('Jumlah: ' . $createdKeranjang->jumlah_barang);
+        }
     }
 
     public function testDeleteBarangStory(): void

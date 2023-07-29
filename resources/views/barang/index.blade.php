@@ -26,6 +26,7 @@
                             <h2 class="card-title">{{ $barang->nama }}</h2>
                             <p>Harga: {{ $barang->harga }}</p>
                             <p>Stok: {{ $barang->stok }}</p>
+                            <p>Perusahaan: {{ $barang->nama_perusahaan }}</p>
                             <div class="card-actions d-flex justify-content-end">
                                 <a href="/barang/{{ $barang->id }}" class="btn btn-primary">Detail</a>
                             </div>
@@ -91,6 +92,7 @@
             <h2 class="card-title">${item.nama}</h2>
             <p>Harga: ${item.harga}</p>
             <p>Stok: ${item.stok}</p>
+            <p>Perusahaan: ${item.nama_perusahaan}</p>
             <div class="card-actions d-flex justify-content-end">
                 <a href="/barang/${item.id}" class="btn btn-primary">Detail</a>
             </div>

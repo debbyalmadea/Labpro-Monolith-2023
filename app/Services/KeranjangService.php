@@ -75,6 +75,9 @@ class KeranjangService implements KeranjangServiceInterface
     public function createKeranjang(User $user, int $jumlah, string|int $barang_id): Keranjang
     {
         $barang = $this->barangService->getBarangByIdWithPerusahaan($barang_id);
+        if ($jumlah < 1) {
+            throw new HttpCustomException(HttpStatusCodes::BAD_REQUEST, 'Jumlah minimal 1 buah');
+        }
 
         if ($jumlah > $barang->stok) {
             throw new HttpCustomException(HttpStatusCodes::BAD_REQUEST, 'Jumlah melebihi stok');

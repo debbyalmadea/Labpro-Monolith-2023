@@ -139,13 +139,14 @@ API Documentation can be accessed [here](https://app.swaggerhub.com/apis-docs/AL
 5. Dependency Inversion Principle
    The Controllers and Services layers only relying on abstractions instead of concrete implementations. The construction and dependency injection are done by laravel itself. This promotes decoupling and flexibility in your application. If there's any changes in the future for the Services or Models layer we don't need to change other layer that depends on it.
 
-### B10 - Automated Testing using Jest
+### B10 - Automated Testing using Browser Kit Testing
 
 - The test scripts can be seen inside `tests` folder. The unit tests cover 87.5% of Service Layer where the business logic lays (100% of the required specification). The e2e tests cover 6/6 page with exception search bar for the barang page
 - To run the test scripts, run the following command
   ```
   php artisan test
   ```
+> Note for e2e test make sure there's at least 2 barang with stok > 0 to make sure all test are covered
 
 ### B11 - Additional Feature
 1. Search feature
