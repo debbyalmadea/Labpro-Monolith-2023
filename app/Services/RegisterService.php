@@ -28,8 +28,6 @@ class RegisterService implements RegisterServiceInterface
         $token = $this->jwtAuthHelper->getToken($user);
 
         $cookie = Cookie::make('access_token', $token, 24 * 60);
-        session(['user' => $user->nama_depan . ' ' . $user->nama_belakang]);
-
         return [
             'user' => $user,
             'token' => $token,

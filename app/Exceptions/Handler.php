@@ -35,7 +35,8 @@ class Handler extends ExceptionHandler
                 $exceptionHandler = (
                     new HttpCustomExceptionHandler())
                     ->setNextHandler(new HttpResponseExceptionHandler())
-                    ->setNextHandler(new QueryExceptionHandler());
+                    ->setNextHandler(new QueryExceptionHandler())
+                    ->setNextHandler(new ConnectionExceptionHandler());
                 return $exceptionHandler->handle($e, $request);
             }
         });

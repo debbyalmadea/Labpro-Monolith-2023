@@ -27,15 +27,17 @@ cd Labpro-Monolith
 3. Run the container using `docker-compose up -d`
 4. The base path for the API is `<domain>/api`
 
-### Migration and seeding the database
+### Setting up the application and database
 1. Open the CLI for the container using the following command:
 ```
 docker ps
 docker exec -it <container-id> sh
 ```
-2. Run the migration by `php artisan migrate`
-3. Run the seeding by `php artisan db:seed`
-4. The password from the seed is always set to `password123` with email `berrygood@gmail.com`
+2. Install the vendor with `composer install`
+3. Run the migration by `php artisan migrate`
+4. Run the seeding by `php artisan db:seed`
+5. or you can run all of that with `bash start.sh`
+6. The password from the seed is always set to `password123` with email `berrygood@gmail.com`
 
 ### Additional Notes
 - If you got postgresql connection error, check your postgresql database and change the `.env` file to match your postgresql settings
@@ -125,9 +127,9 @@ API Documentation can be accessed [here](https://app.swaggerhub.com/apis-docs/AL
 1. Single Responsibility
    Similar to the Single Service app, this app also use MVC + Services architecture. By using this architecture, we're adhering to the Single Responsibility principle where the Controller classes are responsible for parsing the request, call the relevant service(s) to perform the required operations, and send the response. Service classes are responsible for handling complex business logic and provide an abstraction layer between the controller and the database. The view classes are responsible for displaying data to the user with the use of html (+ blade). The model classes are responsible for mapping relational database into an object. 
 2. Open-Closed Principle
-   The implementation of `ErrorHandlerChain` adheres to the Open-Closed Principle because the error handler is designed to be easily extended with new error handlers. Each error handler is represented as a separate class (HttpCustomExceptionHandler, QueryExceptionHandler) that extends the abstract ErrorHandlerChain class. When adding new error handlers, the existing error handler classes do not need to be modified and new error handler can be added to the chain without modifying the existing error handler classes.
+   The implementation of `ErrorHandlerChain` adheres to the Open-Closed Principle because the error handler is designed to be easily extended with new error handlers. Each error handler is represented as a separate class (HttpCustomExceptionHandler, QueryExceptionHandler, ConnectionExceptionHandler) that extends the abstract ErrorHandlerChain class. When adding new error handlers, the existing error handler classes do not need to be modified and new error handler can be added to the chain without modifying the existing error handler classes.
 3. Liskov Substitution Principle
-   The implementation of subclasses of `ErrorHandlerChain`, `HttpCustomError`, `Barang`, `Riwayat Pembelin`, etc. adheres to the Liskov Substitution Principle. The subclasses for ErrorHandlerChain (HttpCustomExceptionHandler, QueryExceptionHandler) are replacing their superclass (ErrorHandlerChain) in the chain of responsibility. All subclasses adhere to the same interface defined by the ErrorHandlerChain superclass. 
+   The implementation of subclasses of `ErrorHandlerChain`, `HttpCustomError`, `Barang`, `Riwayat Pembelin`, etc. adheres to the Liskov Substitution Principle. The subclasses for ErrorHandlerChain (HttpCustomExceptionHandler, QueryExceptionHandler, ConnectionExceptionHandler) are replacing their superclass (ErrorHandlerChain) in the chain of responsibility. All subclasses adhere to the same interface defined by the ErrorHandlerChain superclass. 
 4. Interface Segregation Principle
    The class `Keranjang` implements the Filterable interface and provides a specific implementation for the scopeFilter and builder method. This allows clients of the Keranjang class to use the filter method to filter the collection of Keranjang instances.
 
