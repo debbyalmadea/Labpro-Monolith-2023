@@ -21,12 +21,7 @@
             </div>
         @endif
         @if (Session::has('error'))
-            <div class="alert alert-danger slideInOut fixed-top mx-auto right-0 left-0 max-w-lg mt-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-x-circle-fill mr-2" width="1em" height="1em"
-                    viewBox="0 0 16 16" fill="currentColor">
-                    <path
-                        d="M8 0a8 8 0 100 16A8 8 0 008 0zm4.354 4.354a.5.5 0 10-.708-.708L8 7.293l-3.646-3.647a.5.5 0 10-.708.708L7.293 8l-3.647 3.646a.5.5 0 10.708.708L8 8.707l3.646 3.647a.5.5 0 10.708-.708L8.707 8l3.647-3.646z" />
-                </svg>
+            <div class="alert alert-danger slideInOut fixed-top mx-auto right-0 left-0 mt-4" style="max-width: 500px;">
                 <span>{{ Session::get('error') }}</span>
             </div>
         @endif

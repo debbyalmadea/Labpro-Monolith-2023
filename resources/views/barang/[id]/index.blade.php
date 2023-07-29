@@ -26,15 +26,17 @@
                 <label for="jumlah" class="label-text">Jumlah</label>
                 <input type="number" id="jumlah" name="jumlah"
                     class="form-control @error('jumlah') is-invalid @enderror" min="{{ 1 }}"
-                    max="{{ $barang->stok }}" required>
+                    max="{{ $barang->stok }}" required disabled={{ $barang->stok === 0 }}>
                 @error('jumlah')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
                 <input type="text" id="barang_id" name="barang_id" value="{{ $barang->id }}" hidden>
             </div>
             <div class="mt-4">
-                <button type="submit" class="btn btn-primary" name="action" value="checkout">Beli Barang</button>
-                <button type="submit" class="btn btn-secondary" name="action" value="keranjang">Keranjang</button>
+                <button type="submit" class="btn btn-primary" name="action" value="checkout"
+                    disabled={{ $barang->stok === 0 }}>Beli Barang</button>
+                <button type="submit" class="btn btn-secondary" name="action" value="keranjang"
+                    disabled={{ $barang->stok === 0 }}>Keranjang</button>
             </div>
         </form>
     </div>

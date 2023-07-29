@@ -34,7 +34,7 @@ class Authenticate extends Middleware
                 return redirect('/auth/login')->with('Unauthorized');
             }
 
-            $request->setSession(session(['user' => $user->nama_depan . ' ' . $user->nama_belakang]));
+            session(['user' => $user->nama_depan . ' ' . $user->nama_belakang]);
             return $next($request);
         } catch (\Throwable $th) {
             return redirect('/auth/login')->with('error', $th->getMessage());

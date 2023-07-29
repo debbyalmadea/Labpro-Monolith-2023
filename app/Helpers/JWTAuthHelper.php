@@ -27,7 +27,7 @@ class JWTAuthHelper
         try {
             $parsedToken = $this->parseToken($token);
             $data = $parsedToken['user'];
-            if (User::query()->where('email', $data['email'])) {
+            if (User::query()->where('id', $data['id'])) {
                 return (new User())->fill($data);
             }
 
